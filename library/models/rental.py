@@ -6,6 +6,7 @@ class Rental(models.Model):
     _name = 'library.rental'
     _description = 'Book rental'
     _order = "rental_date desc,return_date desc"
+    _rec_name = 'book_id'
 
     customer_id = fields.Many2one(
         'res.partner',
