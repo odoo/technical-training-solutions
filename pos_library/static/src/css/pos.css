@@ -1,0 +1,18 @@
+.pos .product .state-tag {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    vertical-align: top;
+    color: white;
+    line-height: 13px;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+.pos .product .state-tag.available {
+    background-color: green;
+}
+
+.pos .product .state-tag.rented {
+    background-color: red;
+}

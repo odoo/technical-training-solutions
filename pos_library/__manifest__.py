@@ -22,6 +22,10 @@
 
     # always loaded
     'data': [
+        'views/pos_templates.xml'
+    ],
+    'qweb': [
+        'static/src/xml/pos.xml'
     ],
     # only loaded in demonstration mode
     'demo': [],

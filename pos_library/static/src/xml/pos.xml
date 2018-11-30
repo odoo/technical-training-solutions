@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="ClientDetails">
+    <t t-jquery=".client-details-box" t-operation="after">
+        <div class='client-details-box client-rentals-box clearfix'>
+            <t t-if="!_.isEmpty(partner.rentals)">
+                <div class="rental-detail">
+                    <span class='label'>Current rentals</span>
+                </div>
+                <table class="client-list rental-list">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Rental Date</th>
+                            <th>Return Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="client-list-contents rental-list-contents">
+                        <tr class="rental-line"
+                            t-att-data-book-id="rental.book_id[0]"
+                            t-foreach="partner.rentals" t-as="rental"
+                        >
+                            <td>
+                                <span><t t-esc="rental.book_id[1]"/></span>
+                            </td>
+                            <td>
+                                <span><t t-esc="rental.display_rental_date"/></span>
+                            </td>
+                            <td>
+                                <span><t t-esc="rental.display_return_date"/></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+            <t t-if="_.isEmpty(partner.rentals)">
+                <div class='client-detail'>
+                    <span class='label'>No current rentals</span>
+                </div>
+            </t>
+        </div>
+    </t>
+</t>
+
+<t t-name="BookDetails">
+    <main class='book-details'>
+        <dl>
+            <dt>
+                <span class="label">Title</span>
+            </dt>
+            <dd>
+                <span class="term"><t t-esc="book.display_name"/></span>
+            </dd>
+            <dt>
+                <span class="label">ISBN</span>
+            </dt>
+            <dd>
+                <span class="term"><t t-esc="book.isbn"/></span>
+            </dd>
+            <dt>
+                <span class="label">Edition date</span>
+            </dt>
+            <dd>
+                <span class="term"><t t-esc="book.display_edition_date"/></span>
+            </dd>
+        </dl>
+    </main>
+</t>
+
+<t t-name="BookDetailsPopupWidget">
+    <div role="dialog" class="modal-dialog">
+        <div class="popup popup-book-details">
+            <header class="title">
+                <t t-esc=" widget.options.title || 'Book details' " />
+            </header>
+            <main class='book-details'/>
+            <footer class="footer">
+                <div class="button cancel">
+                    Close
+                </div>
+            </footer>
+        </div>
+    </div>
+</t>
+
+<t t-extend="Product">
+    <t t-jquery=".product-img" t-operation="append">
+        <t t-if="!!product.book">
+            <span t-attf-class="state-tag #{ product.book_state }">
+                <t t-esc="product.book_states[product.book_state]"/>
+            </span>
+        </t>
+    </t>
+</t>
+
+</templates>
