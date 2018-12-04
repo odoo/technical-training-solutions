@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "OpenAcademy",
+    'name': "Cooperative Management",
 
     'summary': """
-        Openacademy""",
+        Cooperative management""",
 
     'description': """
-        Manage course, classes, teachers, students, ...
+        Manage a cooperative group 
     """,
 
     'author': "Odoo",
@@ -24,7 +24,8 @@
     # always loaded
     'data': [
         "security/ir.model.access.csv",
-        "data/openacademy_data.xml",
+        "data/coop_data.xml",
+        "data/task_template.xml",
     ],
     # only loaded in demonstration mode
     'demo': [],
