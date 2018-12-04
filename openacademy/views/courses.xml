@@ -36,6 +36,7 @@
                                         <field name="instructor_id" />
                                         <field name="start_date" />
                                         <field name="duration" />
+                                        <field name="percentage_per_day" />
                                         <field name="seats" />
                                     </tree>
                                 </field>

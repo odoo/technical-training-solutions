@@ -19,13 +19,21 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'product'],
 
     # always loaded
     'data': [
         "security/ir.model.access.csv",
         "data/library_data.xml",
-        "views/views.xml",
+        "data/cron.xml",
+        "data/prices.xml",
+        "views/menus.xml",
+        "views/customer.xml",
+        "views/book.xml",
+        "views/author.xml",
+        "views/rental.xml",
+        "views/payment.xml",
+        "views/price.xml",
     ],
     # only loaded in demonstration mode
     'demo': [],

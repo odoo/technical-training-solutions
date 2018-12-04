@@ -7,16 +7,15 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <group name="purchase" position="after">
-                    <group string="OpenAcademy" name="openacademy">
-                        <field name="instructor"/>
-                    </group>
-                </group>
-                <page name="sales_purchases" position="after">
-                    <page string="Attended Sessions" name="openacademy">
-                        <field name="session_ids"/>
+                <notebook position="inside">
+                    <page string="Sessions">
+                        <group>
+                            <field name="instructor"/>
+                            <field name="level" />
+                            <field name="session_ids"/>
+                        </group>
                     </page>
-                </page>
+                </notebook>
             </field>
         </record>
 
@@ -44,5 +43,14 @@
                   parent="configuration_menu"
                   action="contact_list_action" />
 
+        <record model="ir.actions.act_window" id="contact_cat_list_action">
+            <field name="name">Contact Tags</field>
+            <field name="res_model">res.partner.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="contact_cat_menu" name="Contact Tags"
+                  parent="configuration_menu"
+                  action="contact_cat_list_action"/>
     </data>
 </odoo>
