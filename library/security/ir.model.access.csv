@@ -3,3 +3,4 @@ publisher_manager,Publisher Manager,model_library_publisher,,1,1,1,1
 book_manager,Book Manager,model_library_book,,1,1,1,1
 partner_manager,Partner Manager,model_library_partner,,1,1,1,1
 rental_manager,Rental Manager,model_library_rental,,1,1,1,1
+copy_manager,Copy Manager,model_library_copy,,1,1,1,1
