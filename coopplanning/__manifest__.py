@@ -24,6 +24,9 @@
     # always loaded
     'data': [
         "security/ir.model.access.csv",
+        "views/task_template.xml",
+        "views/task.xml",
+        "views/configuration.xml", #File for extra 03
         "data/coop_data.xml",
         "data/task_template.xml",
     ],

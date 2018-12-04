@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+
     <record id="coopplanning_task_template_d30" model="coopplanning.task.template">
       <field name="name">Pos : Morning 1</field>
       <field name="day_nb_id" ref="day_3"/>
@@ -46,7 +47,6 @@
       <field name="worker_nb">1</field>
       <field eval="True" name="active"/>
     </record>
-
 
     <record id="coopplanning_task_template_d10" model="coopplanning.task.template">
       <field name="name">Pos : Morning 1</field>
@@ -95,8 +95,6 @@
       <field eval="True" name="active"/>
     </record>
 
-
-
     <record id="coopplanning_task_template_d20" model="coopplanning.task.template">
       <field name="name">Pos : Morning 1</field>
       <field name="day_nb_id" ref="day_2"/>
@@ -143,6 +141,4 @@
       <field name="worker_nb">1</field>
       <field eval="True" name="active"/>
     </record>
-
-
 </odoo>

@@ -1,6 +1,18 @@
 # -*- coding: utf-8 -*-
+import math
+from datetime import datetime
+from pytz import UTC
 
-from odoo import models, fields
+from odoo import models, fields, api
+
+
+def float_to_time(f):
+    decimal, integer = math.modf(f)
+    return "%s:%s" % (str(int(integer)).zfill(2), str(int(round(decimal * 60))).zfill(2))
+
+def floatime_to_hour_minute(f):
+    decimal, integer = math.modf(f)
+    return int(integer), int(round(decimal * 60))
 
 
 class TaskType(models.Model):
@@ -31,15 +43,28 @@ class TaskTemplate(models.Model):
     day_nb_id = fields.Many2one('coopplanning.daynumber', string='Day')
     task_type_id = fields.Many2one('coopplanning.task.type', string="Task Type")
     start_time = fields.Float()
+    end_time = fields.Float()
 
-    duration = fields.Float(string='Duration', help="Duration in Hour")
+    duration = fields.Float(string="Duration", compute='_get_duration', help="Duration in Hour", store=True)
     worker_nb = fields.Integer(string="Number of worker", help="Max number of worker for this task", default=1)
-    worker_ids = fields.Many2many('coopplanning.partner', string="Recurrent worker assigned")
+    worker_ids = fields.Many2many('res.partner', string="Recurrent worker assigned")
     active = fields.Boolean(default=True)
+    day_nb = fields.Integer(related='day_nb_id.number', string='Day Number')
+    task_area = fields.Char(related='task_type_id.area', string='Task Area')
+    floating = fields.Boolean("Floating Task", help="This task will be not assigned to someone and will be available for non recurring workers")
+
+    @api.depends('start_time', 'end_time')
+    def _get_duration(self):
+        for rec in self:
+            rec.duration = rec.end_time - rec.start_time
 
 
 class Partner(models.Model):
     _name = 'coopplanning.partner'
     _description = "Partner"
 
-    name = fields.Char(required=True)
+    #Solution : Empty the field worker_ids when floating is selected to be sure no worker will be pre assigned to the task
+    @api.onchange('floating')
+    def _onchange_floating(self):
+        if self.floating:
+            self.worker_ids = self.env['res.partner']

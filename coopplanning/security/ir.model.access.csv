@@ -3,3 +3,4 @@ task_type_manager,task Type Manager,model_coopplanning_task_type,,1,1,1,1
 daynumber_manager,Daynumber Manager,model_coopplanning_daynumber,,1,1,1,1
 task_template_manager,Task_template Manager,model_coopplanning_task_template,,1,1,1,1
 partner_manager,Partner Manager,model_coopplanning_partner,,1,1,1,1
+task_manager,Task Manager,model_coopplanning_task,,1,1,1,1

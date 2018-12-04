@@ -24,6 +24,8 @@
     # always loaded
     'data': [
         "security/ir.model.access.csv",
+        "views/courses.xml",
+        "views/sessions.xml",
         "data/openacademy_data.xml",
     ],
     # only loaded in demonstration mode
