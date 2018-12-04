@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data>
+    <data>
 
         <record model="ir.ui.view" id="course_view_list">
             <field name="name">course list</field>
