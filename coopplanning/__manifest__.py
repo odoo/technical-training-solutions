@@ -23,6 +23,7 @@
 
     # always loaded
     'data': [
+        "security/ir.model.access.csv",
         "data/coop_data.xml",
         "data/task_template.xml",
     ],

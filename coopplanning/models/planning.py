@@ -5,6 +5,7 @@ from odoo import models, fields
 
 class TaskType(models.Model):
     _name = 'coopplanning.task.type'
+    _description = "Task Type"
 
     name = fields.Char()
     description = fields.Text()
@@ -14,14 +15,17 @@ class TaskType(models.Model):
 
 class DayNumber(models.Model):
     _name = 'coopplanning.daynumber'
+    _description = "Day Of Week Number"
 
     name = fields.Char()
-    number = fields.Integer("Day Number", help="From 1 to N, When you will instanciate your planning, Day 1 will be the start date of the instance, Day 2 the second, etc...")
+    number = fields.Integer("Day Number",
+                            help="From 1 to N, When you will instanciate your planning, Day 1 will be the start date of the instance, Day 2 the second, etc...")
     active = fields.Boolean(default=True)
 
 
 class TaskTemplate(models.Model):
     _name = 'coopplanning.task.template'
+    _description = "Task Template"
 
     name = fields.Char(required=True)
     day_nb_id = fields.Many2one('coopplanning.daynumber', string='Day')
@@ -36,5 +40,6 @@ class TaskTemplate(models.Model):
 
 class Partner(models.Model):
     _name = 'coopplanning.partner'
+    _description = "Partner"
 
     name = fields.Char(required=True)

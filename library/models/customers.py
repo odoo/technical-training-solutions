@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, exceptions, _
 
+
 class Partner(models.Model):
     _name = 'library.partner'
+    _description = "Library Partner"
 
     name = fields.Char(string='Name')
     email = fields.Char(string='Email')
@@ -11,4 +13,4 @@ class Partner(models.Model):
     rental_ids = fields.One2many(
         'library.rental',
         'customer_id',
-        string='Rentals',)
+        string='Rentals', )
