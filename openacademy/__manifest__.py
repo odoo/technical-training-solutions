@@ -3,7 +3,8 @@
     'name': "OpenAcademy",
 
     'summary': """
-        Openacademy""",
+        Openacademy
+        """,
 
     'description': """
         Manage course, classes, teachers, students, ...
@@ -23,6 +24,7 @@
 
     # always loaded
     'data': [
+        "security/ir.model.access.csv",
         "data/openacademy_data.xml",
     ],
     # only loaded in demonstration mode
