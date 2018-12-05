@@ -3,10 +3,11 @@
     'name': "OpenAcademy",
 
     'summary': """
-        Course management""",
+        Openacademy
+        """,
 
     'description': """
-        Open Academy allow you to manager you course, session, teacher and attendee. 
+        Manage course, classes, teachers, students, ...
     """,
 
     'author': "Odoo",
@@ -15,7 +16,7 @@
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/10.0/odoo/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Academy',
+    'category': 'Training',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
@@ -23,6 +24,7 @@
 
     # always loaded
     'data': [
+        "security/ir.model.access.csv",
         "views/courses.xml",
         "views/sessions.xml",
         "data/openacademy_data.xml",
