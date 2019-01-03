@@ -33,6 +33,7 @@
         "wizard/add_attendee_views.xml",
         "report/session.xml",
         "data/openacademy_data.xml",
+        "templates.xml",
     ],
     # only loaded in demonstration mode
     'demo':        [],

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="course">
         <t t-call="website.layout">
@@ -49,26 +50,29 @@
     </template>
 
     <template id="session_list">
-           <t t-call="website.layout">
+      <t t-call="website.layout">
         <t t-set="title">Session</t>
          <div class="oe_structure">
-                <div class="container">
-        <t t-foreach="sessions" t-as="session">
-            <h2>
-                <t t-esc="session.name"/>
-            </h2>
-            <p>
-                id:
-                <t t-esc="session.id"/>
-                , course:
-                <t t-esc="session.course_id.name"/>
-            </p>
-            <p>
-                nbr_seats:
-                <t t-esc="session.seats"/>
-                , nbr attendee:
-                <t t-esc="session.attendees_count"/>
-            </p>
-        </t></div></div></t>
+            <div class="container">
+              <t t-foreach="sessions" t-as="session">
+                    <h2>
+                        <t t-esc="session.name"/>
+                    </h2>
+                    <p>
+                        id:
+                        <t t-esc="session.id"/>
+                        , course:
+                        <t t-esc="session.course_id.name"/>
+                    </p>
+                    <p>
+                        nbr_seats:
+                        <t t-esc="session.seats"/>
+                        , nbr attendee:
+                        <t t-esc="session.attendees_count"/>
+                    </p>
+                </t>
+            </div>
+          </div>
+        </t>
     </template>
 </odoo>
