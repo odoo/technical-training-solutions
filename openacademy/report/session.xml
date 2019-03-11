@@ -48,46 +48,50 @@
                         <t t-call="web.html_container">
                             <t t-call="web.external_layout">
                                 <div class="page">
-
                                     <div class="row">
-                                        <div name="attendee_address" class="col-xs-5 col-xs-offset-7">
+                                        <div name="attendee_address" class="col-5 offset-7">
                                             <address t-esc="attendee" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"/>
                                         </div>
                                     </div>
 
-                                     <div class="row">
-                                        Dear <span t-field="attendee.name"/>,<br/>
-                                        You are invite to the training. Check the information below<br/><br/>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            Dear <span t-field="attendee.name"/>,<br/>
+                                            You are invite to the training. Check the information below<br/><br/>
+                                        </div>
                                     </div>
 
                                     <div class="row">
-                                         <table class="table table-condensed">
-                                            <tr>
-                                                <td><b>From:</b></td>
-                                                <td><span t-field="doc.start_date"/></td>
-                                                <td><b>To:</b></td>
-                                                <td><span t-field="doc.end_date"/></td>
-                                            </tr>
-                                             <tr>
-                                                 <td><b>Instructor:</b></td>
-                                                 <td><span t-field="doc.instructor_id.name"/></td>
-                                             </tr>
-                                             <tr>
-                                                 <td><b>Course:</b></td>
-                                                 <td><span t-field="doc.course_id.name"/></td>
-                                             </tr>
-                                             <tr>
-                                                 <td><b>Duration:</b></td>
-                                                 <td><span t-field="doc.duration"/></td>
-                                             </tr>
-                                         </table>
+                                        <div class="col-12">
+                                            <table class="table table-condensed">
+                                                <tr>
+                                                    <td><b>From:</b></td>
+                                                    <td><span t-field="doc.start_date"/></td>
+                                                    <td><b>To:</b></td>
+                                                    <td><span t-field="doc.end_date"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Instructor:</b></td>
+                                                    <td><span t-field="doc.instructor_id.name"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Course:</b></td>
+                                                    <td><span t-field="doc.course_id.name"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Duration:</b></td>
+                                                    <td><span t-field="doc.duration"/></td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
 
                                     <div class="row">
-                                        Scan here:
-                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', attendee.name, 600, 100)" style="width:300px;height:50px"/>
+                                        <div class="col-12">
+                                            Scan here:
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', attendee.name, 600, 100)" style="width:300px;height:50px"/>
+                                        </div>
                                     </div>
-
                                 </div>
                             </t>
                         </t>
