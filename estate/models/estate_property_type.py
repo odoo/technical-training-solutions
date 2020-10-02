@@ -25,7 +25,11 @@ class EstatePropertyType(models.Model):
 
     # Computed (for stat button)
     offer_count = fields.Integer(string="Offers Count", compute="_compute_offer")
-    offer_ids = fields.Many2many("estate.property.offer", string="Offers", compute="_compute_offer")
+    offer_ids = fields.Many2many(
+        "estate.property.offer",
+        string="Offers",
+        compute="_compute_offer",
+    )
 
     # ---------------------------------------- Compute methods ------------------------------------
 

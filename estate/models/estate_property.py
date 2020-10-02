@@ -2,7 +2,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
 
@@ -15,14 +15,16 @@ class EstateProperty(models.Model):
     _description = "Real Estate Property"
     _order = "id desc"
     _sql_constraints = [
-        ("check_expected_price", "CHECK(expected_price > 0)", "The expected price must be strictly positive"),
-        ("check_selling_price", "CHECK(selling_price >= 0)", "The offer price must be positive"),
+        (
+            "check_expected_price",
+            "CHECK(expected_price > 0)",
+            "The expected price must be strictly positive",
+        ), (
+            "check_selling_price",
+            "CHECK(selling_price >= 0)",
+            "The offer price must be positive",
+        ),
     ]
-
-    # ---------------------------------------- Default Methods ------------------------------------
-
-    def _default_date_availability(self):
-        return fields.Date.context_today(self) + relativedelta(months=3)
 
     # --------------------------------------- Fields Declaration ----------------------------------
 
@@ -30,7 +32,6 @@ class EstateProperty(models.Model):
     name = fields.Char("Title", required=True)
     description = fields.Text("Description")
     postcode = fields.Char("Postcode")
-    date_availability = fields.Date("Available From", default=lambda self: self._default_date_availability(), copy=False)
     expected_price = fields.Float("Expected Price", required=True)
     selling_price = fields.Float("Selling Price", copy=False, readonly=True)
     bedrooms = fields.Integer("Bedrooms", default=2)
@@ -61,7 +62,9 @@ class EstateProperty(models.Model):
         string="Status",
         required=True,
         copy=False,
-        default="new",
+        compute="_compute_state",
+        readonly=False,
+        store=True,
     )
     active = fields.Boolean("Active", default=True)
 
@@ -73,12 +76,23 @@ class EstateProperty(models.Model):
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
 
     # Computed
+    date_availability = fields.Date(
+        "Available From",
+        compute='_compute_date_availability',
+        store=True,
+        readonly=False,
+        copy=False,
+    )
     total_area = fields.Integer(
         "Total Area (sqm)",
         compute="_compute_total_area",
         help="Total area computed by summing the living area and the garden area",
     )
-    best_price = fields.Float("Best Offer", compute="_compute_best_price", help="Best offer received")
+    best_price = fields.Float(
+        "Best Offer",
+        compute="_compute_best_price",
+        help="Best offer received",
+    )
 
     # ---------------------------------------- Compute methods ------------------------------------
 
@@ -92,6 +106,22 @@ class EstateProperty(models.Model):
         for prop in self:
             prop.best_price = max(prop.offer_ids.mapped("price")) if prop.offer_ids else 0.0
 
+    @api.depends('create_date')
+    def _compute_date_availability(self):
+        for prop in self:
+            if not prop.date_availability:
+                prop.date_availability = fields.Date.context_today(self) + relativedelta(months=3)
+
+    @api.depends('offer_ids.state')
+    def _compute_state(self):
+        for prop in self:
+            if 'accepted' in prop.offer_ids.mapped('state'):
+                prop.state = 'offer_accepted'
+            elif prop.offer_ids:
+                prop.state = 'offer_received'
+            else:
+                prop.state = 'new'
+
     # ----------------------------------- Constrains and Onchanges --------------------------------
 
     @api.constrains("expected_price", "selling_price")
@@ -99,15 +129,20 @@ class EstateProperty(models.Model):
         for prop in self:
             if (
                 not float_is_zero(prop.selling_price, precision_rounding=0.01)
-                and float_compare(prop.selling_price, prop.expected_price * 90.0 / 100.0, precision_rounding=0.01) < 0
+                and float_compare(
+                    prop.selling_price,
+                    prop.expected_price * 90.0 / 100.0,
+                    precision_rounding=0.01
+                ) < 0
             ):
-                raise ValidationError(
+                raise ValidationError(_(
                     "The selling price must be at least 90% of the expected price! "
-                    + "You must reduce the expected price if you want to accept this offer."
-                )
+                    "You must reduce the expected price if you want to accept this offer."
+                ))
 
     @api.onchange("garden")
     def _onchange_garden(self):
+        # Note this might be a bad usability feature.
         if self.garden:
             self.garden_area = 10
             self.garden_orientation = "N"
@@ -119,17 +154,17 @@ class EstateProperty(models.Model):
 
     def unlink(self):
         if not set(self.mapped("state")) <= {"new", "canceled"}:
-            raise UserError("Only new and canceled properties can be deleted.")
+            raise UserError(_("Only new and canceled properties can be deleted."))
         return super().unlink()
 
     # ---------------------------------------- Action Methods -------------------------------------
 
     def action_sold(self):
         if "canceled" in self.mapped("state"):
-            raise UserError("Canceled properties cannot be sold.")
+            raise UserError(_("Canceled properties cannot be sold."))
         return self.write({"state": "sold"})
 
     def action_cancel(self):
         if "sold" in self.mapped("state"):
-            raise UserError("Sold properties cannot be canceled.")
+            raise UserError(_("Sold properties cannot be canceled."))
         return self.write({"state": "canceled"})

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
@@ -28,10 +28,11 @@ class EstatePropertyOffer(models.Model):
         selection=[
             ("accepted", "Accepted"),
             ("refused", "Refused"),
+            ("awaiting", "Awaiting")
         ],
         string="Status",
         copy=False,
-        default=False,
+        default="awaiting",
     )
 
     # Relational
@@ -39,60 +40,58 @@ class EstatePropertyOffer(models.Model):
     property_id = fields.Many2one("estate.property", string="Property", required=True)
     # For stat button:
     property_type_id = fields.Many2one(
-        "estate.property.type", related="property_id.property_type_id", string="Property Type", store=True
+        "estate.property.type",
+        related="property_id.property_type_id",
+        string="Property Type",
+        store=True,
     )
 
     # Computed
-    date_deadline = fields.Date(string="Deadline", compute="_compute_date_deadline", inverse="_inverse_date_deadline")
+    date = fields.Date(compute="_compute_date", readonly=False, store=True)
+    date_deadline = fields.Date(
+        string="Deadline",
+        compute="_compute_date_deadline",
+        inverse="_inverse_date_deadline",
+    )
 
     # ---------------------------------------- Compute methods ------------------------------------
 
-    @api.depends("create_date", "validity")
+    @api.depends("date", "validity")
     def _compute_date_deadline(self):
         for offer in self:
-            date = offer.create_date.date() if offer.create_date else fields.Date.today()
-            offer.date_deadline = date + relativedelta(days=offer.validity)
+            offer.date_deadline = offer.date + relativedelta(days=offer.validity)
 
     def _inverse_date_deadline(self):
         for offer in self:
-            date = offer.create_date.date() if offer.create_date else fields.Date.today()
-            offer.validity = (offer.date_deadline - date).days
+            offer.validity = (offer.date_deadline - offer.date).days
 
-    # ------------------------------------------ CRUD Methods -------------------------------------
+    @api.depends('create_date')
+    def _compute_date(self):
+        for offer in self:
+            offer.date = offer.date or fields.Date.context_today(offer)
 
-    @api.model
-    def create(self, vals):
-        if vals.get("property_id") and vals.get("price"):
-            prop = self.env["estate.property"].browse(vals["property_id"])
-            # We check if the offer is higher than the existing offers
-            if prop.offer_ids:
-                max_offer = max(prop.mapped("offer_ids.price"))
-                if float_compare(vals["price"], max_offer, precision_rounding=0.01) <= 0:
-                    raise UserError("The offer must be higher than %.2f" % max_offer)
-            prop.state = "offer_received"
-        return super().create(vals)
+    # ------------------------------------ Constraint Methods -------------------------------------
+
+    @api.constrains('property_id')
+    def _constrains_property_id(self):
+        for offer in self:
+            if offer.property_id.state in ('sold', 'canceled'):
+                raise UserError(_("You can't make an offer for a Sold or Canceled property"))
+            max_offer = max(offer.property_id.offer_ids, key=lambda o: o.price)
+            if max_offer != offer:
+                raise UserError(_("The offer must be higher than %.2f", max_offer.price))
 
     # ---------------------------------------- Action Methods -------------------------------------
 
     def action_accept(self):
-        if "accepted" in self.mapped("property_id.offer_ids.state"):
-            raise UserError("An offer as already been accepted.")
-        self.write(
-            {
-                "state": "accepted",
-            }
-        )
-        return self.mapped("property_id").write(
-            {
-                "state": "offer_accepted",
-                "selling_price": self.price,
-                "buyer_id": self.partner_id.id,
-            }
-        )
+        if "accepted" in self.property_id.offer_ids.mapped("state"):
+            raise UserError(_("An offer as already been accepted."))
+        self.state = 'accepted'
+        self.property_id.write({
+            "state": "offer_accepted",
+            "selling_price": self.price,
+            "buyer_id": self.partner_id.id,
+        })
 
     def action_refuse(self):
-        return self.write(
-            {
-                "state": "refused",
-            }
-        )
+        self.state = 'refused'
