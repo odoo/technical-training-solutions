@@ -6,6 +6,7 @@
     "depends": [
         "base",
         "web",
+        "website",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -14,7 +15,9 @@
         "views/estate_property_type_views.xml",
         "views/estate_property_views.xml",
         "views/res_users_views.xml",
+        "views/template.xml",
         "views/estate_menus.xml",
+        "data/data.xml",
     ],
     "application": True,
 }

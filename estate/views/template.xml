@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="all_estates" name="Our Real Estates">
+            <t t-call="website.layout">
+                <div class="m-4">
+                    <div class="h1 mb-3">Our real estate
+                        <t t-foreach="types" t-as="one_type">
+                            <a t-attf-class="ml-1 btn btn-sm btn-#{'' if one_type == current_type else 'outline-'}primary"
+                               t-attf-href='/estates/#{slug(one_type)}'
+                               t-field='one_type.name' />
+                        </t>
+                        <a t-if="current_type" class='btn btn-link ml-1 ' t-attf-href='/estates'><i class='fa fa-times'/> All</a>
+                    </div>
+                    <div class="row">
+                        <t t-foreach="estates" t-as="one_estate">
+                            <t t-call="estate.estate_card">
+                                <t t-set="the_estate" t-value="one_estate"/>
+                            </t>
+                        </t>
+
+                        <div t-if="pager" class="mx-auto">
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="estate_card">
+            <div class="col-12">
+                <div t-attf-class="media #{one_estate_index % 2 and 'bg-100' or 'bg-200'} my-2" style="border-radius: 10px; min-height:175px">
+                  <img class="o_width_256 align-self-center m-2 rounded" t-attf-src="/web/image/estate.property/#{the_estate.id}/image_256" t-att-alt="the_estate.name" />
+                  <div class="media-body m-4">
+                    <a class='btn btn-link stretched-link pull-right' t-att-href='"/estate/%s" % slug(the_estate)'><i class='fa fa-eye'/></a>
+                    <h3 class="mt-0 card-title" t-field='the_estate.name'/>
+                    <p t-field='the_estate.description'/>
+                  </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="offer_form">
+          <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+              <section class="s_cover parallax s_parallax_is_fixed bg-black-50 pt64 pb64 o_colored_level" data-scroll-background-ratio="1">
+                <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"></span>
+                <div class="o_we_bg_filter bg-black-50"></div>
+                <div class="container s_allow_columns text-center">
+                  <h1>Make an offer</h1> for
+                  <h2 t-field='record.name'/>
+                </div>
+              </section>
+              <section class="pt16 pb16 o_colored_level">
+                <div class="container">
+                  <div t-if="offer_id" class='text-center'>
+                        <h1>Thank you for your offer.</h1>
+                        <h2>You offer has the reference  #<span t-esc="record.id"/>/<span t-esc="offer_id.id"/>. </h2>
+                        <p class='text-muted'>
+                            <b>Estate:</b> <span t-field="offer_id.property_id.name"/><br/>
+                            <b>Price:</b> <span t-field="offer_id.price"/> €
+                        </p>
+                  </div>
+                  <div t-else="">
+                      <t t-if='errors'>
+                        <div t-foreach='errors' t-as="error" class="alert alert-danger" role="alert">
+                          <t t-raw="error"/>
+                        </div>
+                      </t>
+                      <form t-attf-action="/estate/offer/#{record.id}" method="post">
+                        <div class="row s_col_no_bgcolor">
+                          <div class="form-group col-12" t-if="not user_id.partner_id.phone">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                              <label class="col-form-label col-sm-auto" style="width: 200px" for="offer_phone">
+                                <span>Phone Number</span>
+                              </label>
+                              <div class="col-sm">
+                                <input type="tel" class="form-control " name="offer_phone" required="true" id="offer_phone"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group col-12" >
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                              <label class="col-form-label col-sm-auto" style="width: 200px" for="offer_email">
+                                <span>Your Email</span>
+                              </label>
+                              <div class="col-sm">
+                                <input type="email" t-att-value='user_id.partner_id.email' t-att-readonly="user_id.partner_id.email and True or None" class="form-control " name="offer_email" required="true" id="offer_email"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group col-12">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                              <label class="col-form-label col-sm-auto" style="width: 200px" for="offer_price">
+                                <span>Your Best Price</span>
+                              </label>
+                              <div class="col-sm">
+                                <input type="number" class="form-control" t-att-value="kw.get('price', '')" name="offer_price" required="true" id="offer_price"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group col-12">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                              <label class="col-form-label col-sm-auto" style="width: 200px" for="offer_validity">
+                                <span>Validity (days)</span>
+                              </label>
+                              <div class="col-sm">
+                                <input type="number" class="form-control" t-att-value="kw.get('value', 7)" name="offer_validity" required="true" id="offer_validity"/>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group col-12">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                              <label class="col-form-label col-sm-auto" style="width: 200px"></label>
+                              <div class="col-sm">
+                                <input type="checkbox" class="mr-2" required="true" id="accept_cgv"/>
+                                <label class='font-weight-normal' for='accept_cgv'>I accept <a href='/cgv' target='_blank'>CGV</a></label>
+                              </div>
+                            </div>
+                          </div>
+                          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                          <div class="form-group col-12">
+                            <input type='submit' class="btn btn-primary btn-lg btn-block" value="Submit My Best Offer" />
+                          </div>
+                        </div>
+                      </form>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </t>
+
+        </template>
+
+        <template id="one_estate" name="One Estate">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <section class="s_cover bg-black-50 o_colored_level pt192 pb192 parallax o_half_screen_height" data-scroll-background-ratio="0.95" data-snippet="s_cover" data-name="Cover" style="">
+                          <span class="s_parallax_bg oe_img_bg" t-attf-style="top: -42.705px; bottom: -42.705px; transform: translateY(-2px); background-image: url('/web/image/estate.property/#{record.id}/image_1920');"/>
+                          <div class="o_we_bg_filter bg-black-50"/>
+                          <div class="s_allow_columns container-fluid">
+                            <h1 class='mb-4' style="text-align: center;">
+                              <font style="font-size: 62px; font-weight: bold;" t-field="record.name"></font>
+                            </h1>
+                            <h2 class='mb-4' style="text-align: center;"><span t-field="record.expected_price"/> €</h2>
+                            <div style="text-align: center;"><a t-attf-href='/web/login?redirect=/estate/offer/#{record.id}' class='btn btn-lg btn-primary'>Make an offer</a></div>
+                          </div>
+                        </section>
+                        <section class="s_product_catalog oe_custom_bg pt48 pb32 o_colored_level" style="position: relative; background-image: url(');" data-vcss="001" data-snippet="s_product_catalog" data-name="Pricelist" data-oe-shape-data="{'shape':'web_editor/Blocks/03','colors':{'c1':'rgba(58, 173, 170, 0.23)','c4':'#FFFFFF'},'flip':[]}">
+                              <div class="o_we_shape o_web_editor_Blocks_03" style="background-image: url('/web_editor/shape/web_editor/Blocks/03.svg?c1=rgba(58%2C%20173%2C%20170%2C%200.23)&amp;c4=%23FFFFFF');"></div>
+                              <div class="container">
+                                    <div class="row">
+                                      <div t-foreach="sections" t-as="categ" class="col-lg-6 pt16 pb16 o_colored_level">
+                                        <h3 t-esc="categ[0]" />
+                                        <ul class="list-unstyled my-3">
+                                            <li t-foreach="categ[1]" t-as='field' class="s_product_catalog_dish" data-name="Product">
+                                                <p class="s_product_catalog_dish_title d-flex align-items-baseline pb-2">
+                                                    <span class="s_product_catalog_dish_name " t-esc="record._fields[field].string"/>
+                                                    <span class="s_product_catalog_dish_price ml-auto pl-2 " t-esc="record[field] if record[field] else 'n/c'" />
+                                                </p>
+                                            </li>
+                                        </ul>
+                                      </div>
+                                  </div>
+                             </div>
+
+                        </section>
+                    </div>
+                    <div class="oe_structure">
+                        <div class="container">
+                            <div class="row">
+                                <h1 class="col-12">Description</h1>
+                                <div class="col-12" t-field="record.website_description"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -3,9 +3,9 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
-
 
 class EstateProperty(models.Model):
 
@@ -14,6 +14,11 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Real Estate Property"
     _order = "id desc"
+    _inherit = [
+        'website.seo.metadata',
+        'website.published.mixin',
+        'image.mixin',
+    ]
     _sql_constraints = [
         ("check_expected_price", "CHECK(expected_price > 0)", "The expected price must be strictly positive"),
         ("check_selling_price", "CHECK(selling_price >= 0)", "The offer price must be positive"),
@@ -80,6 +85,8 @@ class EstateProperty(models.Model):
     )
     best_price = fields.Float("Best Offer", compute="_compute_best_price", help="Best offer received")
 
+    website_description = fields.Html(default="<p>A long description <b>in</b> <u>HTML</u></p>")
+
     # ---------------------------------------- Compute methods ------------------------------------
 
     @api.depends("living_area", "garden_area")
@@ -91,6 +98,14 @@ class EstateProperty(models.Model):
     def _compute_best_price(self):
         for prop in self:
             prop.best_price = max(prop.offer_ids.mapped("price")) if prop.offer_ids else 0.0
+
+    @api.depends_context('lang')
+    def _compute_website_url(self):
+        for record in self:
+            record.website_url = '/estate/%s' % slug(self)
+
+    def _default_is_published(self):
+        return True
 
     # ----------------------------------- Constrains and Onchanges --------------------------------
 

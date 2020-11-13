@@ -20,7 +20,7 @@ class EstatePropertyOffer(models.Model):
     # --------------------------------------- Fields Declaration ----------------------------------
 
     # Basic
-    price = fields.Float("Price", required=True)
+    price = fields.Integer("Price", required=True)
     validity = fields.Integer(string="Validity (days)", default=7)
 
     # Special
