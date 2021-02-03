@@ -15,6 +15,11 @@
         "views/estate_property_views.xml",
         "views/res_users_views.xml",
         "views/estate_menus.xml",
+        "report/estate_reports.xml",
+        "report/estate_report_views.xml",
+    ],
+    "demo": [
+        "data/estate_demo.xml"
     ],
     "application": True,
 }
