@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="estate_report_view_dashboard" model="ir.ui.view">
+            <field name="name">estate.property.dashboard</field>
+            <field name="model">estate.report</field>
+            <field name="arch" type="xml">
+                <dashboard>
+                    <group>
+                        <group>
+                            <aggregate name="num_rejections" string="Refused Offers" field="id"
+                                group_operator="count" domain="[('offer_state', '=', 'refused')]"/>
+                            <aggregate name="num_properties" string="Properties with Offers" field="property_id"
+                                group_operator="count_distinct"/>
+                            <aggregate name="total_sold" string="Properties Sold" field="property_id"
+                                group_operator="count_distinct" domain="[('property_state', '=', 'sold')]"
+                                help="Total number of sold properties."/>
+                            <aggregate name="total_canceled" string="Properties Canceled" field="property_id"
+                                group_operator="count_distinct" domain="[('property_state', '=', 'canceled')]"
+                                help="Total number of canceled properties."/>
+                            <formula name="avg_rejection_sold" string="Avg Refusals For Sold" value="record.num_rejections / record.total_sold"
+                                help="Average number of rejections for sold properties."/>
+                            <formula name="avg_rejection_cancel" string="Avg Refusals for Canceled" value="record.num_rejections / record.total_canceled"
+                                help="Average number of rejections for canceled properties."/>
+                        </group>
+                        <group col="1">
+                            <widget name="pie_chart" title="Offer Property Types" attrs="{'groupby': 'property_type_id'}"/>
+                            <widget name="pie_chart" title="Rejected Offers"
+                                attrs="{'groupby': 'property_type_id',
+                                        'domain': '[(\'offer_state\', \'=\', \'refused\')]'}"/>
+                        </group>
+                    </group>
+                </dashboard>
+            </field>
+        </record>
+
+        <record id="estate_report_view_tree" model="ir.ui.view">
+            <field name="name">estate.report.tree</field>
+            <field name="model">estate.report</field>
+            <field name="arch" type="xml">
+                <tree string="Properties Offers" decoration-success="offer_state == 'accepted'" decoration-muted="offer_state == 'refused'" decoration-bf="property_state == 'sold'">
+                    <field name="property_id"/>
+                    <field name="property_type_id"/>
+                    <field name="property_state"/>
+                    <field name="offer_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="estate_report_view_form" model="ir.ui.view">
+            <field name="name">estate.report.form</field>
+            <field name="model">estate.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                    <group>
+                        <field name="property_id"/>
+                        <field name="property_type_id"/>
+                        <field name="property_state"/>
+                        <field name="offer_state"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="estate_report_dashboard_action" model="ir.actions.act_window">
+            <field name="name">Offers Analysis</field>
+            <field name="res_model">estate.report</field>
+            <field name="view_mode">dashboard</field>
+            <field name="view_id" ref="estate_report_view_dashboard"/>
+        </record>
+
+        <menuitem
+            id="estate_dashboard_menuitem"
+            name="Offers Analysis"
+            parent="menu_estate_report"
+            action="estate_report_dashboard_action"/>
+    </data>
+</odoo>

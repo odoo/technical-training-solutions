@@ -10,4 +10,6 @@
             <menuitem id="estate_property_tag_menu_action" action="estate_property_tag_action" sequence="10"/>
         </menuitem>
     </menuitem>
+
+    <menuitem id="estate.menu_estate_report" name="Reporting" parent="estate_menu_root"/>
 </odoo>

@@ -136,10 +136,64 @@
         </field>
     </record>
 
+    <record id="estate_property_view_dashboard" model="ir.ui.view">
+        <field name="name">estate.property.dashboard</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <dashboard>
+                <group>
+                    <view type="graph"/>
+                    <group>
+                        <aggregate name="min_expected_price" string="Min Expected Price" field="expected_price" group_operator="min"
+                            help="Lowest expected price."/>
+                        <aggregate name="max_expected_price" string="Max Expected Price" field="expected_price" group_operator="max"
+                            help="Highest expected price."/>
+                        <aggregate name="expected_price_avg" string="Total Expected Price" field="expected_price" group_operator="sum"
+                            help="Average expected price of properties."/>
+                        <aggregate name="living_area_avg" string="Avg Living Area" field="living_area" group_operator="avg"
+                            help="Average living area of properties."/>
+                    </group>
+                    <group col="1">
+                        <widget name="pie_chart" title="Property Types" attrs="{'groupby': 'property_type_id'}"/>
+                        <widget name="pie_chart" title="Total Sales"
+                            attrs="{'groupby': 'property_type_id',
+                                    'measure': 'selling_price',
+                                    'domain': '[(\'state\', \'=\', \'sold\')]'}"/>
+                    </group>
+                    <view type="pivot"/>
+                </group>
+            </dashboard>
+        </field>
+    </record>
+
+    <!-- Extra subviews, in case you don't want to use the auto-generated defaults
+    <record id="estate_property_graph_view" model="ir.ui.view">
+        <field name="name">estate.property.view.graph</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <graph string="Property Bedrooms" >
+                <field name="bedrooms"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="estate_property_pivot_view" model="ir.ui.view">
+        <field name="name">estate.property.view.pivot</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <pivot string="Estate Overview">
+                <field name="bedrooms" type="col"/>
+                <field name="property_type_id" type="row"/>
+                <field name="expected_price" type="measure"/>
+                <field name="selling_price" type="measure"/>
+            </pivot>
+        </field>
+    </record> -->
+
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">tree,kanban,form,dashboard</field>
         <field name="context">{'search_default_available': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
