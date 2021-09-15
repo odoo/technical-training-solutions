@@ -46,7 +46,7 @@
         <field name="expected_price">45890000</field>
         <field name="property_type_id" ref="property_industrial"/>
         <field name="offer_ids" eval="[
-            (0, 0, {
+            Command.create({
                 'partner_id': 1,
                 'price': 40000000,
             }),
