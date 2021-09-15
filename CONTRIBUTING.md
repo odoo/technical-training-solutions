@@ -14,7 +14,7 @@ Be clear about the requirements. It might be general knowledge or practical info
 
 > This tutorial assumes you followed the Core Training.
 >
-> To do the exercise, fetch the branch `14.0-core` from the repository XXX. It contains
+> To do the exercise, fetch the branch `15.0-core` from the repository XXX. It contains
 > a basic module we will use as a starting point.
 
 There is no magic recipe to write a tutorial, but here is an idea of what could be done:
@@ -106,7 +106,7 @@ might not be for someone else.
 ## Add your solution to this repository
 
 Create a specific branch in this repository with the solution. For the Advanced topics, it is
-suggested to create a new branch from `14.0-core` and add a single commit with the solution.
+suggested to create a new branch from `15.0-core` and add a single commit with the solution.
 Multiple commits might be tempting (e.g. to show the step-by-step solution), but they are way more
 complex to maintain.
 
