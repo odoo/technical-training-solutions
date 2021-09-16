@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tests.common import Form
 
 
 @tagged('post_install', '-at_install')
-class EstateTestCase(SavepointCase):
+class EstateTestCase(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
