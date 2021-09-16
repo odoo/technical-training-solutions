@@ -62,8 +62,12 @@ class EstatePropertyOffer(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("property_id") and vals.get("price"):
-            prop = self.env["estate.property"].browse(vals["property_id"])
+        prop = self.env["estate.property"]
+        if vals.get("property_id"):
+            prop = prop.browse(vals["property_id"])
+            if prop.state == 'sold':
+                raise UserError("You cannot make an offer on a sold property")
+        if prop and vals.get("price"):
             # We check if the offer is higher than the existing offers
             if prop.offer_ids:
                 max_offer = max(prop.mapped("offer_ids.price"))

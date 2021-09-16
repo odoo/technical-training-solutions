@@ -127,6 +127,8 @@ class EstateProperty(models.Model):
     def action_sold(self):
         if "canceled" in self.mapped("state"):
             raise UserError("Canceled properties cannot be sold.")
+        if not any(offer.state == 'accepted' for offer in self.offer_ids):
+            raise UserError("Cannot sell a property that doesn't have an accepted offer.")
         return self.write({"state": "sold"})
 
     def action_cancel(self):
