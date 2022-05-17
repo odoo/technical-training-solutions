@@ -3,7 +3,7 @@
 from odoo import fields, models
 
 
-class EstatePropertyType(models.Model):
+class EstatePropertyTag(models.Model):
 
     # ---------------------------------------- Private Attributes ---------------------------------
 
