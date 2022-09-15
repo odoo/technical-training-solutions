@@ -3,6 +3,7 @@
 
 {
     "name": "Real Estate",
+    "category": 'Real Estate/Brokerage',
     "depends": [
         "base",
         "web",
