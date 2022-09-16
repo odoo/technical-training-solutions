@@ -2,6 +2,7 @@
 
 {
     "name": "Real Estate Accounting",
+    "license": "LGPL-3",
     "depends": [
         "estate",
         "account",
