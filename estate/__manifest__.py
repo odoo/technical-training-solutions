@@ -4,12 +4,14 @@
 {
     "name": "Real Estate",
     "license": "LGPL-3",
+    "category": "Real Estate",
     "depends": [
         "base",
         "web",
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/security.xml",
         "views/estate_property_offer_views.xml",
         "views/estate_property_tag_views.xml",
         "views/estate_property_type_views.xml",

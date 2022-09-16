@@ -14,6 +14,7 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Real Estate Property"
     _order = "id desc"
+    _check_company_auto = True
     _sql_constraints = [
         ("check_expected_price", "CHECK(expected_price > 0)", "The expected price must be strictly positive"),
         ("check_selling_price", "CHECK(selling_price >= 0)", "The offer price must be positive"),
@@ -67,7 +68,7 @@ class EstateProperty(models.Model):
 
     # Relational
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
-    user_id = fields.Many2one("res.users", string="Salesman", default=lambda self: self.env.user)
+    user_id = fields.Many2one("res.users", string="Salesman")
     buyer_id = fields.Many2one("res.partner", string="Buyer", readonly=True, copy=False)
     tag_ids = fields.Many2many("estate.property.tag", string="Tags")
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
@@ -79,6 +80,11 @@ class EstateProperty(models.Model):
         help="Total area computed by summing the living area and the garden area",
     )
     best_price = fields.Float("Best Offer", compute="_compute_best_price", help="Best offer received")
+
+    # Multi-Company
+    company_id = fields.Many2one(
+        'res.company', required=True, default = lambda self: self.env.company
+    )
 
     # ---------------------------------------- Compute methods ------------------------------------
 
