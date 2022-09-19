@@ -83,7 +83,7 @@ class EstateProperty(models.Model):
 
     # Multi-Company
     company_id = fields.Many2one(
-        'res.company', required=True, default = lambda self: self.env.company
+        'res.company', required=True, default=lambda self: self.env.company
     )
 
     # ---------------------------------------- Compute methods ------------------------------------
