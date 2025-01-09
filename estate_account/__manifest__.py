@@ -6,5 +6,4 @@
         "estate",
         "account",
     ],
-    "auto_install": True,
 }
