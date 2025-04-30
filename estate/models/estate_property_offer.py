@@ -77,12 +77,11 @@ class EstatePropertyOffer(models.Model):
     def action_accept(self):
         if "accepted" in self.mapped("property_id.offer_ids.state"):
             raise UserError("An offer as already been accepted.")
-        self.write(
+        return self.write(
             {
                 "state": "accepted",
             }
-        )
-        return self.mapped("property_id").write(
+        ) and self.mapped("property_id").write(
             {
                 "state": "offer_accepted",
                 "selling_price": self.price,
